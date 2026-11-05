@@ -1,33 +1,15 @@
-<script setup>
-defineProps({
-    id: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        default: null,
-    },
-    label: {
-        type: String,
-        required: true,
-    },
-    type: {
-        type: String,
-        default: 'text',
-    },
-    autocomplete: {
-        type: String,
-        default: null,
-    },
-    required: {
-        type: Boolean,
-        default: false,
-    },
-    error: {
-        type: String,
-        default: '',
-    },
+<script setup lang="ts">
+withDefaults(defineProps<{
+    id: string;
+    name?: string;
+    label: string;
+    type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'datetime-local' | 'month' | 'week';
+    autocomplete?: string;
+    required?: boolean;
+    error?: string;
+}>(), {
+    type: 'text',
+    required: false,
 });
 </script>
 

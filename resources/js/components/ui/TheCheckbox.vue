@@ -1,26 +1,11 @@
-<script setup>
-const props = defineProps({
-    id: {
-        type: String,
-        required: true,
-    },
-    name: {
-        type: String,
-        default: null,
-    },
-    label: {
-        type: String,
-        required: true,
-    },
-    value: {
-        type: String,
-        default: '1',
-    },
-    class: {
-        type: String,
-        default: '',
-    },
-});
+<script setup lang="ts">
+const props = defineProps<{
+    id: string;
+    name?: string;
+    label: string;
+    value?: string;
+    class?: string;
+}>();
 </script>
 
 <template>

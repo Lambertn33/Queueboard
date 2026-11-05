@@ -9,12 +9,12 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthenticationController::class, 'store']);
 });
 
-Route::get('/home', function () {
-    return Inertia::render('Welcome', [
-        'message' => 'Laravel sent this page to Vue through Inertia.',
-    ]);
-})->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('/home', function () {
+        return Inertia::render('Welcome', [
+            'message' => 'Laravel sent this page to Vue through Inertia.',
+        ]);
+    })->name('home');
 
-Route::post('logout', [AuthenticationController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+    Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
+});

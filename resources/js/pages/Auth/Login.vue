@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import TheButton from '@/components/ui/TheButton.vue';
 import TheCheckbox from '@/components/ui/TheCheckbox.vue';
@@ -29,7 +29,7 @@ import TheInput from '@/components/ui/TheInput.vue';
                     required
                 />
 
-                <TheCheckbox id="remember" label="Remember me" />
+                <TheCheckbox id="remember" label="Remember me" name="remember" value="1" class="w-full" />
 
                 <TheButton type="submit" class="w-full" :disabled="processing">
                     Sign in

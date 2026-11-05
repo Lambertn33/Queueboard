@@ -8,7 +8,7 @@
 
         @fonts
 
-        @vite('resources/js/app.js')
+        @vite('resources/js/app.ts')
         <x-inertia::head />
     </head>
     <body class="min-h-screen bg-[#F4F7FE] font-sans text-gray-900 antialiased">

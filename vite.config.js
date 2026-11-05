@@ -9,7 +9,7 @@ import inertia from '@inertiajs/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.js'],
+            input: ['resources/js/app.ts'],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {
