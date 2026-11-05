@@ -1,7 +1,14 @@
 <?php
 
-test('the application returns a successful response', function () {
-    $response = $this->get('/');
+use Inertia\Testing\AssertableInertia;
 
-    $response->assertStatus(200);
+test('the home page is rendered through inertia', function () {
+    $this->withoutVite();
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Welcome')
+            ->where('message', 'Laravel sent this page to Vue through Inertia.')
+        );
 });
