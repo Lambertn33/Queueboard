@@ -33,6 +33,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return BelongsToMany<Role, $this>
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
+
+    /**
      * @return BelongsToMany<Team, $this>
      */
     public function teams(): BelongsToMany
