@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import TheSidebar from '@/components/sidebar/TheSidebar.vue';
+import TheTopbar from '@/components/topbar/TheTopbar.vue';
 </script>
 
 <template>
@@ -8,6 +9,8 @@ import TheSidebar from '@/components/sidebar/TheSidebar.vue';
             <TheSidebar />
 
             <div class="flex min-w-0 flex-1 flex-col">
+                <TheTopbar />
+
                 <slot />
             </div>
         </div>
