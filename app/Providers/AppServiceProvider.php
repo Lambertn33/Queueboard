@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Enums\RoleName;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Gate::define('createTeam', fn (User $user): bool => $user->hasRole(RoleName::Admin));
+
+        Gate::define('createProject', fn (User $user): bool => $user->hasRole(RoleName::Admin));
+
+        Gate::define('createUser', fn (User $user): bool => $user->hasRole(RoleName::Admin));
+
+        Gate::define('assignRole', fn (User $user): bool => $user->hasRole(RoleName::Admin));
     }
 }

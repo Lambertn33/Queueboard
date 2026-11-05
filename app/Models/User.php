@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RoleName;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -38,6 +39,18 @@ class User extends Authenticatable
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class)->withTimestamps();
+    }
+
+    /**
+     * Determine whether the user holds the given role.
+     */
+    public function hasRole(RoleName $role): bool
+    {
+        $this->loadMissing('roles');
+
+        return $this->roles->contains(
+            fn (Role $assignedRole): bool => $assignedRole->name === $role,
+        );
     }
 
     /**
