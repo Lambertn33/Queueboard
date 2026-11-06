@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticationController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,6 +16,8 @@ Route::middleware('auth')->group(function () {
             'message' => 'Laravel sent this page to Vue through Inertia.',
         ]);
     })->name('home');
+
+    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
 
     Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
 });
