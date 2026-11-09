@@ -26,4 +26,16 @@ class TeamsService
                 'projects_count' => (int) $team->projects_count,
             ]);
     }
+
+    /**
+     * Create a team.
+     *
+     * @param  array{name: string}  $attributes
+     */
+    public function createTeam(array $attributes): Team
+    {
+        return Team::query()->create([
+            'name' => $attributes['name'],
+        ]);
+    }
 }

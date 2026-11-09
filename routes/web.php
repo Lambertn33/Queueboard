@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
     })->name('home');
 
     Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
 
     Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
+
 });

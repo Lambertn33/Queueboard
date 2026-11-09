@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Teams\StoreTeamRequest;
 use App\Services\Teams\TeamsService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,5 +27,15 @@ class TeamController extends Controller
                 page: (int) $request->query('page', 1),
             ),
         ]);
+    }
+
+    /**
+     * Create a team.
+     */
+    public function store(StoreTeamRequest $request): RedirectResponse
+    {
+        $this->teamsService->createTeam($request->safe()->only(['name']));
+
+        return redirect()->route('teams.index');
     }
 }
