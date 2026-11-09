@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+    Route::patch('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
 
     Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
 

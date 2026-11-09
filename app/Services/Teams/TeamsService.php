@@ -38,4 +38,18 @@ class TeamsService
             'name' => $attributes['name'],
         ]);
     }
+
+    /**
+     * Update a team's name.
+     *
+     * @param  array{name: string}  $attributes
+     */
+    public function updateTeam(Team $team, array $attributes): Team
+    {
+        $team->update([
+            'name' => $attributes['name'],
+        ]);
+
+        return $team;
+    }
 }

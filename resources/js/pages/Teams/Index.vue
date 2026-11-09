@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import CreateTeamModal from '@/components/teams/CreateTeamModal.vue';
+import EditTeamModal from '@/components/teams/EditTeamModal.vue';
 import TeamsList from '@/components/teams/TeamsList.vue';
 import TheButton from '@/components/ui/TheButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Can } from '@/types/can';
-import type { PaginatedTeams } from '@/types/team';
+import type { PaginatedTeams, Team } from '@/types/team';
 import { usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
@@ -21,7 +22,10 @@ const page = usePage<{
 }>();
 
 const canCreateTeam = computed((): boolean => page.props.can.createTeam);
+const canUpdateTeam = computed((): boolean => page.props.can.updateTeam);
+
 const createOpen = ref(false);
+const editingTeam = ref<Team | null>(null);
 
 function openCreate(): void {
     createOpen.value = true;
@@ -29,6 +33,14 @@ function openCreate(): void {
 
 function closeCreate(): void {
     createOpen.value = false;
+}
+
+function openEdit(team: Team): void {
+    editingTeam.value = team;
+}
+
+function closeEdit(): void {
+    editingTeam.value = null;
 }
 </script>
 
@@ -49,8 +61,19 @@ function closeCreate(): void {
             </TheButton>
         </div>
 
-        <TeamsList :teams="teams" />
+        <TeamsList
+            :teams="teams"
+            :can-update-team="canUpdateTeam"
+            @edit="openEdit"
+        />
 
         <CreateTeamModal v-if="canCreateTeam" :open="createOpen" @close="closeCreate" />
+
+        <EditTeamModal
+            v-if="canUpdateTeam && editingTeam"
+            :open="editingTeam !== null"
+            :team="editingTeam"
+            @close="closeEdit"
+        />
     </main>
 </template>

@@ -55,10 +55,12 @@ class HandleInertiaRequests extends Middleware
             ],
             'can' => [
                 'createTeam' => $user?->can('createTeam') ?? false,
+                'updateTeam' => $user?->can('updateTeam') ?? false,
                 'createProject' => $user?->can('createProject') ?? false,
                 'createUser' => $user?->can('createUser') ?? false,
                 'assignRole' => $user?->can('assignRole') ?? false,
             ],
+
         ];
     }
 }

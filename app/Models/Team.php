@@ -9,11 +9,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['name'])]
+#[Fillable(['name', 'is_archived'])]
 class Team extends Model
 {
     /** @use HasFactory<TeamFactory> */
     use HasFactory;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_archived' => 'boolean',
+        ];
+    }
 
     /**
      * @return BelongsToMany<User, $this>

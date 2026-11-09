@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Teams\StoreTeamRequest;
+use App\Http\Requests\Teams\UpdateTeamRequest;
+use App\Models\Team;
 use App\Services\Teams\TeamsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,6 +37,16 @@ class TeamController extends Controller
     public function store(StoreTeamRequest $request): RedirectResponse
     {
         $this->teamsService->createTeam($request->safe()->only(['name']));
+
+        return redirect()->route('teams.index');
+    }
+
+    /**
+     * Update a team's name.
+     */
+    public function update(UpdateTeamRequest $request, Team $team): RedirectResponse
+    {
+        $this->teamsService->updateTeam($team, $request->safe()->only(['name']));
 
         return redirect()->route('teams.index');
     }
