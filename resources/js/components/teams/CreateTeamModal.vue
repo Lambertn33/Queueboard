@@ -23,6 +23,7 @@ function close(): void {
             action="/teams"
             method="post"
             class="flex flex-col gap-4"
+            :preserve-state="false"
             reset-on-success
             :on-success="close"
             #default="{ errors, processing }"

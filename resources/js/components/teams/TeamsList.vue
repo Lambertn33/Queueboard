@@ -33,6 +33,6 @@ defineProps<{
             </tbody>
         </table>
 
-        <TheTablePagination :paginator="teams" />
+        <TheTablePagination :paginator="teams" v-if="teams.data.length > 0" />
     </section>
 </template>
