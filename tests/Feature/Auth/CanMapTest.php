@@ -19,6 +19,8 @@ test('an admin can manage teams, projects, users, and roles', function () {
 
     expect($user->can('createTeam'))->toBeTrue()
         ->and($user->can('updateTeam'))->toBeTrue()
+        ->and($user->can('addTeamMember'))->toBeTrue()
+        ->and($user->can('removeTeamMember'))->toBeTrue()
         ->and($user->can('createProject'))->toBeTrue()
         ->and($user->can('createUser'))->toBeTrue()
         ->and($user->can('updateUser'))->toBeTrue()
@@ -31,6 +33,8 @@ test('an admin can manage teams, projects, users, and roles', function () {
             ->where('can', [
                 'createTeam' => true,
                 'updateTeam' => true,
+                'addTeamMember' => true,
+                'removeTeamMember' => true,
                 'createProject' => true,
                 'createUser' => true,
                 'updateUser' => true,
@@ -48,6 +52,8 @@ test('users without the admin role cannot manage teams, projects, users, or role
 
     expect($user->can('createTeam'))->toBeFalse()
         ->and($user->can('updateTeam'))->toBeFalse()
+        ->and($user->can('addTeamMember'))->toBeFalse()
+        ->and($user->can('removeTeamMember'))->toBeFalse()
         ->and($user->can('createProject'))->toBeFalse()
         ->and($user->can('createUser'))->toBeFalse()
         ->and($user->can('updateUser'))->toBeFalse()
@@ -60,6 +66,8 @@ test('users without the admin role cannot manage teams, projects, users, or role
             ->where('can', [
                 'createTeam' => false,
                 'updateTeam' => false,
+                'addTeamMember' => false,
+                'removeTeamMember' => false,
                 'createProject' => false,
                 'createUser' => false,
                 'updateUser' => false,
@@ -80,6 +88,8 @@ test('a guest receives no admin permissions', function () {
             ->where('can', [
                 'createTeam' => false,
                 'updateTeam' => false,
+                'addTeamMember' => false,
+                'removeTeamMember' => false,
                 'createProject' => false,
                 'createUser' => false,
                 'updateUser' => false,

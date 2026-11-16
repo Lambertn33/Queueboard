@@ -26,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('updateTeam', fn (User $user): bool => $user->hasRole(RoleName::Admin));
 
+        Gate::define('addTeamMember', fn (User $user): bool => $user->hasRole(RoleName::Admin));
+
+        Gate::define('removeTeamMember', fn (User $user): bool => $user->hasRole(RoleName::Admin));
+
         Gate::define('createProject', fn (User $user): bool => $user->hasRole(RoleName::Admin));
 
         Gate::define('createUser', fn (User $user): bool => $user->hasRole(RoleName::Admin));

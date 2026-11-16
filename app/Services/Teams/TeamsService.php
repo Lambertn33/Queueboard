@@ -3,6 +3,7 @@
 namespace App\Services\Teams;
 
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class TeamsService
@@ -51,5 +52,21 @@ class TeamsService
         ]);
 
         return $team;
+    }
+
+    /**
+     * Add a member to the team.
+     */
+    public function addMember(Team $team, User $user): void
+    {
+        $team->members()->syncWithoutDetaching([$user->id]);
+    }
+
+    /**
+     * Remove a member from the team.
+     */
+    public function removeMember(Team $team, User $user): void
+    {
+        $team->members()->detach($user->id);
     }
 }

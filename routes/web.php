@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticationController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,6 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
     Route::patch('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
+    Route::post('/teams/{team}/members', [TeamMemberController::class, 'store'])->name('teams.members.store');
+    Route::delete('/teams/{team}/members/{user}', [TeamMemberController::class, 'destroy'])->name('teams.members.destroy');
 
     Route::get('/members', [UserController::class, 'index'])->name('members.index');
     Route::post('/members', [UserController::class, 'store'])->name('members.store');
