@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import TheTablePagination from '@/components/table/TheTablePagination.vue';
-import type { PaginatedMembers } from '@/types/member';
+import TheButton from '@/components/ui/TheButton.vue';
+import type { Member, PaginatedMembers } from '@/types/member';
 
 defineProps<{
     members: PaginatedMembers;
+    canUpdateUser: boolean;
+}>();
+
+const emit = defineEmits<{
+    edit: [member: Member];
 }>();
 
 const roleLabels: Record<string, string> = {
@@ -14,6 +20,8 @@ const roleLabels: Record<string, string> = {
 function rolesLabel(roles: string[]): string {
     return roles.map((role) => roleLabels[role] ?? role).join(', ');
 }
+
+const actionClass = 'inline-flex size-8 items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700';
 </script>
 
 <template>
@@ -21,14 +29,15 @@ function rolesLabel(roles: string[]): string {
         <table class="w-full border-collapse text-left">
             <thead>
                 <tr class="bg-[#F8F9FB] text-[13px] font-medium text-[#98A2B3]">
-                    <th class="w-[30%] px-4 py-3 font-medium" scope="col">Name</th>
-                    <th class="w-[35%] px-4 py-3 font-medium" scope="col">Email</th>
+                    <th class="w-[28%] px-4 py-3 font-medium" scope="col">Name</th>
+                    <th class="w-[32%] px-4 py-3 font-medium" scope="col">Email</th>
                     <th class="px-4 py-3 font-medium" scope="col">Roles</th>
+                    <th class="px-4 py-3 font-medium" scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="members.data.length === 0">
-                    <td class="px-4 py-4 text-sm text-[#98A2B3]" colspan="3">No members yet.</td>
+                    <td class="px-4 py-4 text-sm text-[#98A2B3]" colspan="4">No members yet.</td>
                 </tr>
                 <tr
                     v-for="member in members.data"
@@ -38,6 +47,21 @@ function rolesLabel(roles: string[]): string {
                     <td class="px-4 py-4 text-sm font-medium text-gray-900">{{ member.name }}</td>
                     <td class="px-4 py-4 text-sm text-gray-500">{{ member.email }}</td>
                     <td class="px-4 py-4 text-sm text-gray-500">{{ rolesLabel(member.roles) }}</td>
+                    <td class="px-4 py-4">
+                        <div class="flex items-center gap-1">
+                            <TheButton
+                                v-if="canUpdateUser"
+                                type="button"
+                                variant="plain"
+                                :class="actionClass"
+                                :disabled="false"
+                                :aria-label="`Edit ${member.name}`"
+                                @click="emit('edit', member)"
+                            >
+                                <VIcon name="hi-pencil-alt" scale="0.75" />
+                            </TheButton>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
