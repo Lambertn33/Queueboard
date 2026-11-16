@@ -10,6 +10,7 @@ import {
     HiFolder,
     HiPencilAlt,
     HiPlus,
+    HiUser,
     HiUserAdd,
     HiUserGroup,
 } from 'oh-vue-icons/icons/hi';
@@ -24,6 +25,7 @@ addIcons(
     HiFolder,
     HiPencilAlt,
     HiPlus,
+    HiUser,
     HiUserAdd,
     HiUserGroup,
 );

@@ -4,6 +4,7 @@ import type { NavItem } from '@/types/nav';
 
 const items: NavItem[] = [
     { label: 'Teams', icon: 'hi-user-group', href: '/teams' },
+    { label: 'Members', icon: 'hi-user', href: '/members' },
     { label: 'Projects', icon: 'hi-folder' },
     { label: 'Tasks', icon: 'hi-clipboard-check' },
 ];

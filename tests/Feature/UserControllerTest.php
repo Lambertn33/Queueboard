@@ -34,7 +34,7 @@ test('the members list includes only members and project leads', function () {
         ->get(route('members.index'))
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Members/Index', false)
+            ->component('Members/Index')
             ->where('members.data', [
                 [
                     'id' => $alpha->id,
