@@ -3,5 +3,6 @@ export interface Can {
     updateTeam: boolean;
     createProject: boolean;
     createUser: boolean;
+    updateUser: boolean;
     assignRole: boolean;
 }

@@ -21,6 +21,7 @@ test('an admin can manage teams, projects, users, and roles', function () {
         ->and($user->can('updateTeam'))->toBeTrue()
         ->and($user->can('createProject'))->toBeTrue()
         ->and($user->can('createUser'))->toBeTrue()
+        ->and($user->can('updateUser'))->toBeTrue()
         ->and($user->can('assignRole'))->toBeTrue();
 
     $this->actingAs($user)
@@ -32,6 +33,7 @@ test('an admin can manage teams, projects, users, and roles', function () {
                 'updateTeam' => true,
                 'createProject' => true,
                 'createUser' => true,
+                'updateUser' => true,
                 'assignRole' => true,
             ])
             ->where('auth.user.roles', ['ADMIN', 'MEMBER'])
@@ -48,6 +50,7 @@ test('users without the admin role cannot manage teams, projects, users, or role
         ->and($user->can('updateTeam'))->toBeFalse()
         ->and($user->can('createProject'))->toBeFalse()
         ->and($user->can('createUser'))->toBeFalse()
+        ->and($user->can('updateUser'))->toBeFalse()
         ->and($user->can('assignRole'))->toBeFalse();
 
     $this->actingAs($user)
@@ -59,6 +62,7 @@ test('users without the admin role cannot manage teams, projects, users, or role
                 'updateTeam' => false,
                 'createProject' => false,
                 'createUser' => false,
+                'updateUser' => false,
                 'assignRole' => false,
             ])
         );
@@ -78,6 +82,7 @@ test('a guest receives no admin permissions', function () {
                 'updateTeam' => false,
                 'createProject' => false,
                 'createUser' => false,
+                'updateUser' => false,
                 'assignRole' => false,
             ])
             ->where('auth.user', null)

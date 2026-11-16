@@ -6,6 +6,7 @@ use App\Enums\RoleName;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class UsersService
 {
@@ -37,5 +38,56 @@ class UsersService
                     ->values()
                     ->all(),
             ]);
+    }
+
+    /**
+     * Create a member with the default password.
+     *
+     * @param  array{name: string, email: string, roles: list<string>}  $attributes
+     */
+    public function createUser(array $attributes): User
+    {
+        return DB::transaction(function () use ($attributes): User {
+            $user = User::query()->create([
+                'name' => $attributes['name'],
+                'email' => $attributes['email'],
+                'password' => 'password',
+            ]);
+
+            $this->syncMemberRoles($user, $attributes['roles']);
+
+            return $user;
+        });
+    }
+
+    /**
+     * Update a member's name, email, and roles.
+     *
+     * @param  array{name: string, email: string, roles: list<string>}  $attributes
+     */
+    public function updateUser(User $user, array $attributes): User
+    {
+        return DB::transaction(function () use ($user, $attributes): User {
+            $user->update([
+                'name' => $attributes['name'],
+                'email' => $attributes['email'],
+            ]);
+
+            $this->syncMemberRoles($user, $attributes['roles']);
+
+            return $user;
+        });
+    }
+
+    /**
+     * @param  list<string>  $roles
+     */
+    private function syncMemberRoles(User $user, array $roles): void
+    {
+        $roleIds = Role::query()
+            ->whereIn('name', $roles)
+            ->pluck('id');
+
+        $user->roles()->sync($roleIds);
     }
 }

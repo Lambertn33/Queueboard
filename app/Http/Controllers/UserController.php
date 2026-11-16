@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Users\StoreUserRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
+use App\Models\User;
 use App\Services\Users\UsersService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,5 +29,25 @@ class UserController extends Controller
                 page: (int) $request->query('page', 1),
             ),
         ]);
+    }
+
+    /**
+     * Create a member.
+     */
+    public function store(StoreUserRequest $request): RedirectResponse
+    {
+        $this->usersService->createUser($request->safe()->only(['name', 'email', 'roles']));
+
+        return redirect()->route('members.index');
+    }
+
+    /**
+     * Update a member.
+     */
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    {
+        $this->usersService->updateUser($user, $request->safe()->only(['name', 'email', 'roles']));
+
+        return redirect()->route('members.index');
     }
 }

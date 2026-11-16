@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
 
     Route::get('/members', [UserController::class, 'index'])->name('members.index');
+    Route::post('/members', [UserController::class, 'store'])->name('members.store');
+    Route::patch('/members/{user}', [UserController::class, 'update'])->name('members.update');
 
     Route::post('logout', [AuthenticationController::class, 'destroy'])->name('logout');
 
