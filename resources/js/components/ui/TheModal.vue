@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
                 @click="close"
             />
 
-            <div class="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-lg">
+            <div class="relative w-full max-w-md rounded-2xl bg-panel p-6 shadow-lg">
                 <div class="flex items-start justify-between gap-4">
                     <h2 class="text-xl font-semibold tracking-tight text-gray-950">{{ title }}</h2>
 

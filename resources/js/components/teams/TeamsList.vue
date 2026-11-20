@@ -19,7 +19,7 @@ const actionClass = 'inline-flex size-8 items-center justify-center text-gray-50
     <section>
         <table class="w-full border-collapse text-left">
             <thead>
-                <tr class="bg-[#F8F9FB] text-[13px] font-medium text-[#98A2B3]">
+                <tr class="bg-brand-soft text-[13px] font-medium text-[#98A2B3]">
                     <th class="w-[40%] px-4 py-3 font-medium" scope="col">Team</th>
                     <th class="px-4 py-3 font-medium" scope="col">Members</th>
                     <th class="px-4 py-3 font-medium" scope="col">Projects</th>

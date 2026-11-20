@@ -31,7 +31,7 @@ function logout(): void {
             aria-haspopup="menu"
             @click="toggle"
         >
-            <span class="flex size-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+            <span class="flex size-10 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">
                 {{ initial }}
             </span>
             <span class="text-left">
@@ -43,7 +43,7 @@ function logout(): void {
 
         <div
             v-if="open"
-            class="absolute top-full right-0 z-10 mt-2 w-40 rounded-lg border border-gray-200 bg-white p-2 shadow-sm"
+            class="absolute top-full right-0 z-10 mt-2 w-40 rounded-lg border border-gray-200 bg-panel p-2 shadow-sm"
             role="menu"
         >
             <TheButton type="button" class="w-full" :disabled="false" role="menuitem" @click="logout">

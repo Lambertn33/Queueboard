@@ -24,7 +24,7 @@ const current = computed((): boolean => {
         v-if="href"
         :href="href"
         class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium"
-        :class="current ? 'bg-blue-50 text-blue-700' : 'text-gray-600'"
+        :class="current ? 'bg-brand-soft text-brand' : 'text-gray-600'"
         :aria-current="current ? 'page' : undefined"
     >
         <VIcon :name="icon" scale="0.85" />

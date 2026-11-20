@@ -42,14 +42,14 @@ function changePageSize(event: Event): void {
             <Link
                 v-if="paginator.prev_page_url"
                 :href="paginator.prev_page_url"
-                :class="[controlClass, 'border-[#E4E7EC] bg-white text-gray-500 hover:bg-gray-50']"
+                :class="[controlClass, 'border-[#E4E7EC] bg-panel text-gray-500 hover:bg-gray-50']"
                 aria-label="Previous page"
             >
                 <VIcon name="hi-chevron-left" scale="0.65" />
             </Link>
             <span
                 v-else
-                :class="[controlClass, 'border-[#E4E7EC] bg-white text-gray-300']"
+                :class="[controlClass, 'border-[#E4E7EC] bg-panel text-gray-300']"
                 aria-hidden="true"
             >
                 <VIcon name="hi-chevron-left" scale="0.65" />
@@ -58,7 +58,7 @@ function changePageSize(event: Event): void {
             <template v-for="link in pageLinks" :key="link.label">
                 <span
                     v-if="link.active"
-                    :class="[controlClass, 'border-blue-600 bg-blue-600 text-white']"
+                    :class="[controlClass, 'border-brand bg-brand text-white']"
                     aria-current="page"
                 >
                     {{ link.label }}
@@ -66,7 +66,7 @@ function changePageSize(event: Event): void {
                 <Link
                     v-else-if="link.url"
                     :href="link.url"
-                    :class="[controlClass, 'border-[#E4E7EC] bg-white text-gray-600 hover:bg-gray-50']"
+                    :class="[controlClass, 'border-[#E4E7EC] bg-panel text-gray-600 hover:bg-gray-50']"
                 >
                     {{ link.label }}
                 </Link>
@@ -75,14 +75,14 @@ function changePageSize(event: Event): void {
             <Link
                 v-if="paginator.next_page_url"
                 :href="paginator.next_page_url"
-                :class="[controlClass, 'border-[#E4E7EC] bg-white text-gray-500 hover:bg-gray-50']"
+                :class="[controlClass, 'border-[#E4E7EC] bg-panel text-gray-500 hover:bg-gray-50']"
                 aria-label="Next page"
             >
                 <VIcon name="hi-chevron-right" scale="0.65" />
             </Link>
             <span
                 v-else
-                :class="[controlClass, 'border-[#E4E7EC] bg-white text-gray-300']"
+                :class="[controlClass, 'border-[#E4E7EC] bg-panel text-gray-300']"
                 aria-hidden="true"
             >
                 <VIcon name="hi-chevron-right" scale="0.65" />
@@ -96,7 +96,7 @@ function changePageSize(event: Event): void {
                 <span class="sr-only">Rows per page</span>
                 <select
                     :value="paginator.per_page"
-                    class="h-9 appearance-none rounded-lg border border-[#E4E7EC] bg-white pr-8 pl-3 text-[13px] text-gray-600"
+                    class="h-9 appearance-none rounded-lg border border-[#E4E7EC] bg-panel pr-8 pl-3 text-[13px] text-gray-600"
                     @change="changePageSize"
                 >
                     <option v-for="size in pageSizes" :key="size" :value="size">Show {{ size }} Data</option>
