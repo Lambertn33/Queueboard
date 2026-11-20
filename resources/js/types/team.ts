@@ -5,6 +5,7 @@ export interface Team {
     name: string;
     members_count: number;
     projects_count: number;
+    member_ids: number[];
 }
 
 export interface PaginatedTeams extends Paginator {

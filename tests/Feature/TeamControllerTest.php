@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\RoleName;
+use App\Enums\TeamRole;
+use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,14 +27,15 @@ test('a short team list fits on one page', function () {
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->component('Teams/Index')
             ->where('teams.data', [
-                ['id' => $alpha->id, 'name' => 'Alpha', 'members_count' => 0, 'projects_count' => 0],
-                ['id' => $zeta->id, 'name' => 'Zeta', 'members_count' => 0, 'projects_count' => 0],
+                ['id' => $alpha->id, 'name' => 'Alpha', 'members_count' => 0, 'projects_count' => 0, 'member_ids' => []],
+                ['id' => $zeta->id, 'name' => 'Zeta', 'members_count' => 0, 'projects_count' => 0, 'member_ids' => []],
             ])
             ->where('teams.per_page', 10)
             ->where('teams.current_page', 1)
             ->where('teams.last_page', 1)
             ->where('teams.total', 2)
             ->where('teams.next_page_url', null)
+            ->where('assignableMembers', [])
         );
 });
 
@@ -47,8 +51,8 @@ test('teams that share a name stay in id order', function () {
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('teams.data', [
-                ['id' => $first->id, 'name' => 'Alpha', 'members_count' => 0, 'projects_count' => 0],
-                ['id' => $second->id, 'name' => 'Alpha', 'members_count' => 0, 'projects_count' => 0],
+                ['id' => $first->id, 'name' => 'Alpha', 'members_count' => 0, 'projects_count' => 0, 'member_ids' => []],
+                ['id' => $second->id, 'name' => 'Alpha', 'members_count' => 0, 'projects_count' => 0, 'member_ids' => []],
             ])
         );
 });
@@ -123,5 +127,37 @@ test('page two returns the teams after the first page', function () {
             ->where('teams.current_page', 2)
             ->where('teams.last_page', 2)
             ->where('teams.total', 16)
+        );
+});
+
+test('an admin receives assignable members and team member ids', function () {
+    $this->withoutVite();
+
+    $admin = User::factory()->create();
+    $admin->roles()->attach(Role::factory()->create(['name' => RoleName::Admin]));
+
+    $ada = User::factory()->create(['name' => 'Ada', 'email' => 'ada@queueboard.test']);
+    $grace = User::factory()->create(['name' => 'Grace', 'email' => 'grace@queueboard.test']);
+
+    $team = Team::factory()->create(['name' => 'Backend']);
+    $team->members()->attach($ada->id, ['role' => TeamRole::Member->value]);
+
+    $this->actingAs($admin)
+        ->get(route('teams.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('teams.data.0.member_ids', [$ada->id])
+            ->where('assignableMembers', [
+                [
+                    'id' => $ada->id,
+                    'name' => 'Ada',
+                    'email' => 'ada@queueboard.test',
+                ],
+                [
+                    'id' => $grace->id,
+                    'name' => 'Grace',
+                    'email' => 'grace@queueboard.test',
+                ],
+            ])
         );
 });

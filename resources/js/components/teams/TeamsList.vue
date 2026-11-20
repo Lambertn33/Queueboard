@@ -6,10 +6,12 @@ import type { PaginatedTeams, Team } from '@/types/team';
 defineProps<{
     teams: PaginatedTeams;
     canUpdateTeam: boolean;
+    canAddTeamMember: boolean;
 }>();
 
 const emit = defineEmits<{
     edit: [team: Team];
+    addMember: [team: Team];
 }>();
 
 const actionClass = 'inline-flex size-8 items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700';
@@ -41,11 +43,13 @@ const actionClass = 'inline-flex size-8 items-center justify-center text-gray-50
                     <td class="px-4 py-4">
                         <div class="flex items-center gap-1">
                             <TheButton
+                                v-if="canAddTeamMember"
                                 type="button"
                                 variant="plain"
                                 :class="actionClass"
                                 :disabled="false"
                                 :aria-label="`Add a member to ${team.name}`"
+                                @click="emit('addMember', team)"
                             >
                                 <VIcon name="hi-user-add" scale="0.75" />
                             </TheButton>

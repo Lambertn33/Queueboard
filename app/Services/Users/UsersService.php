@@ -4,6 +4,7 @@ namespace App\Services\Users;
 
 use App\Enums\RoleName;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UsersService
@@ -15,18 +16,43 @@ class UsersService
      */
     public function getUsers(int $perPage, int $page): LengthAwarePaginator
     {
-        return User::query()
-            ->whereDoesntHave('roles', function ($query): void {
-                $query->where('name', RoleName::Admin);
-            })
-            ->orderBy('name')
-            ->orderBy('id')
+        return $this->membersQuery()
             ->paginate(perPage: $perPage, page: $page)
             ->through(fn (User $user): array => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
             ]);
+    }
+
+    /**
+     * List every person who can be assigned to a team.
+     *
+     * @return list<array{id: int, name: string, email: string}>
+     */
+    public function getAssignableMembers(): array
+    {
+        return $this->membersQuery()
+            ->get(['id', 'name', 'email'])
+            ->map(fn (User $user): array => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ])
+            ->all();
+    }
+
+    /**
+     * @return Builder<User>
+     */
+    private function membersQuery(): Builder
+    {
+        return User::query()
+            ->whereDoesntHave('roles', function ($query): void {
+                $query->where('name', RoleName::Admin);
+            })
+            ->orderBy('name')
+            ->orderBy('id');
     }
 
     /**

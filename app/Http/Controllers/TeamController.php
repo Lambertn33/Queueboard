@@ -6,6 +6,7 @@ use App\Http\Requests\Teams\StoreTeamRequest;
 use App\Http\Requests\Teams\UpdateTeamRequest;
 use App\Models\Team;
 use App\Services\Teams\TeamsService;
+use App\Services\Users\UsersService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +17,10 @@ class TeamController extends Controller
     /**
      * Create a new controller instance.
      */
-    public function __construct(private TeamsService $teamsService) {}
+    public function __construct(
+        private TeamsService $teamsService,
+        private UsersService $usersService,
+    ) {}
 
     /**
      * List the teams, one page at a time.
@@ -28,6 +32,9 @@ class TeamController extends Controller
                 perPage: (int) $request->query('per_page', 10),
                 page: (int) $request->query('page', 1),
             ),
+            'assignableMembers' => $request->user()?->can('addTeamMember')
+                ? $this->usersService->getAssignableMembers()
+                : [],
         ]);
     }
 

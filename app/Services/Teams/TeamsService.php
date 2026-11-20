@@ -12,11 +12,12 @@ class TeamsService
     /**
      * List the teams for the requested page.
      *
-     * @return LengthAwarePaginator<int, array{id: int, name: string, members_count: int, projects_count: int}>
+     * @return LengthAwarePaginator<int, array{id: int, name: string, members_count: int, projects_count: int, member_ids: list<int>}>
      */
     public function getTeams(int $perPage, int $page): LengthAwarePaginator
     {
         return Team::query()
+            ->with(['members:id'])
             ->withCount(['members', 'projects'])
             ->orderBy('name')
             ->orderBy('id')
@@ -26,6 +27,7 @@ class TeamsService
                 'name' => $team->name,
                 'members_count' => (int) $team->members_count,
                 'projects_count' => (int) $team->projects_count,
+                'member_ids' => $team->members->modelKeys(),
             ]);
     }
 
