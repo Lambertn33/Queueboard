@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TeamRole;
 use App\Http\Requests\Teams\RemoveTeamMemberRequest;
 use App\Http\Requests\Teams\StoreTeamMemberRequest;
 use App\Models\Team;
@@ -24,7 +25,10 @@ class TeamMemberController extends Controller
         /** @var User $member */
         $member = User::query()->findOrFail($request->integer('user_id'));
 
-        $this->teamsService->addMember($team, $member);
+        /** @var TeamRole $role */
+        $role = $request->enum('role', TeamRole::class);
+
+        $this->teamsService->addMember($team, $member, $role);
 
         return redirect()->route('teams.index');
     }

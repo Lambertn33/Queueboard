@@ -12,10 +12,7 @@ test('an admin can manage teams, projects, users, and roles', function () {
     $this->withoutVite();
 
     $user = User::factory()->create();
-    $user->roles()->attach([
-        Role::factory()->create(['name' => RoleName::Admin])->id,
-        Role::factory()->create(['name' => RoleName::Member])->id,
-    ]);
+    $user->roles()->attach(Role::factory()->create(['name' => RoleName::Admin]));
 
     expect($user->can('createTeam'))->toBeTrue()
         ->and($user->can('updateTeam'))->toBeTrue()
@@ -40,15 +37,14 @@ test('an admin can manage teams, projects, users, and roles', function () {
                 'updateUser' => true,
                 'assignRole' => true,
             ])
-            ->where('auth.user.roles', ['ADMIN', 'MEMBER'])
+            ->where('auth.user.roles', ['ADMIN'])
         );
 });
 
-test('users without the admin role cannot manage teams, projects, users, or roles', function (RoleName $role) {
+test('users without the admin role cannot manage teams, projects, users, or roles', function () {
     $this->withoutVite();
 
     $user = User::factory()->create();
-    $user->roles()->attach(Role::factory()->create(['name' => $role]));
 
     expect($user->can('createTeam'))->toBeFalse()
         ->and($user->can('updateTeam'))->toBeFalse()
@@ -74,10 +70,7 @@ test('users without the admin role cannot manage teams, projects, users, or role
                 'assignRole' => false,
             ])
         );
-})->with([
-    'member' => RoleName::Member,
-    'project lead' => RoleName::ProjectLead,
-]);
+});
 
 test('a guest receives no admin permissions', function () {
     $this->withoutVite();

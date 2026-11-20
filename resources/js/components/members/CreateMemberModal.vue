@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Form } from '@inertiajs/vue3';
 import TheButton from '@/components/ui/TheButton.vue';
-import TheCheckbox from '@/components/ui/TheCheckbox.vue';
 import TheInput from '@/components/ui/TheInput.vue';
 import TheModal from '@/components/ui/TheModal.vue';
 
@@ -46,15 +45,6 @@ function close(): void {
                 required
                 :error="errors.email"
             />
-
-            <fieldset>
-                <legend class="text-sm font-medium text-gray-700">Roles</legend>
-                <div class="mt-2 flex flex-col gap-2">
-                    <TheCheckbox id="role-member" name="roles[]" value="MEMBER" label="Member" />
-                    <TheCheckbox id="role-project-lead" name="roles[]" value="PROJECT_LEAD" label="Project lead" />
-                </div>
-                <p v-if="errors.roles" class="mt-1 text-sm font-medium text-red-600">{{ errors.roles }}</p>
-            </fieldset>
 
             <div class="flex items-center justify-end gap-2">
                 <TheButton type="button" variant="plain" class="px-4 py-2 text-gray-600" :disabled="processing" @click="close">

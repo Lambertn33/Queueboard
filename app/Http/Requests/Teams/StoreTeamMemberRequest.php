@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Teams;
 
 use App\Enums\RoleName;
+use App\Enums\TeamRole;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -44,17 +45,12 @@ class StoreTeamMemberRequest extends FormRequest
 
                     if ($member->hasRole(RoleName::Admin)) {
                         $fail('Admins cannot be added to a team.');
-
-                        return;
-                    }
-
-                    if (
-                        ! $member->hasRole(RoleName::Member)
-                        && ! $member->hasRole(RoleName::ProjectLead)
-                    ) {
-                        $fail('Only members and project leads can be added to a team.');
                     }
                 },
+            ],
+            'role' => [
+                'required',
+                Rule::enum(TeamRole::class),
             ],
         ];
     }

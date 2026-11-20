@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\RoleName;
+use App\Enums\TeamRole;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
@@ -11,27 +12,33 @@ uses(RefreshDatabase::class);
 test('guests are redirected when adding a team member', function () {
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach(Role::factory()->create(['name' => RoleName::Member]));
 
-    $this->post(route('teams.members.store', $team), ['user_id' => $member->id])
-        ->assertRedirect(route('login'));
+    $this->post(route('teams.members.store', $team), [
+        'user_id' => $member->id,
+        'role' => TeamRole::Member->value,
+    ])->assertRedirect(route('login'));
 
     expect($team->members()->where('users.id', $member->id)->exists())->toBeFalse();
 });
 
-test('an admin can add a member to a team', function () {
+test('an admin can add a member to a team with a role', function () {
     $admin = User::factory()->create();
     $admin->roles()->attach(Role::factory()->create(['name' => RoleName::Admin]));
 
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach(Role::factory()->create(['name' => RoleName::Member]));
 
     $this->actingAs($admin)
-        ->post(route('teams.members.store', $team), ['user_id' => $member->id])
+        ->post(route('teams.members.store', $team), [
+            'user_id' => $member->id,
+            'role' => TeamRole::Member->value,
+        ])
         ->assertRedirect(route('teams.index'));
 
-    expect($team->members()->where('users.id', $member->id)->exists())->toBeTrue();
+    $membership = $team->members()->where('users.id', $member->id)->first();
+
+    expect($membership)->not->toBeNull()
+        ->and($membership->pivot->role)->toBe(TeamRole::Member);
 });
 
 test('an admin can add a project lead to a team', function () {
@@ -40,26 +47,48 @@ test('an admin can add a project lead to a team', function () {
 
     $team = Team::factory()->create();
     $lead = User::factory()->create();
-    $lead->roles()->attach(Role::factory()->create(['name' => RoleName::ProjectLead]));
 
     $this->actingAs($admin)
-        ->post(route('teams.members.store', $team), ['user_id' => $lead->id])
+        ->post(route('teams.members.store', $team), [
+            'user_id' => $lead->id,
+            'role' => TeamRole::ProjectLead->value,
+        ])
         ->assertRedirect(route('teams.index'));
 
-    expect($team->members()->where('users.id', $lead->id)->exists())->toBeTrue();
+    $membership = $team->members()->where('users.id', $lead->id)->first();
+
+    expect($membership)->not->toBeNull()
+        ->and($membership->pivot->role)->toBe(TeamRole::ProjectLead);
 });
 
-test('a member cannot add someone to a team', function () {
-    $actor = User::factory()->create();
-    $memberRole = Role::factory()->create(['name' => RoleName::Member]);
-    $actor->roles()->attach($memberRole);
+test('adding a team member requires a role', function () {
+    $admin = User::factory()->create();
+    $admin->roles()->attach(Role::factory()->create(['name' => RoleName::Admin]));
 
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach($memberRole);
+
+    $this->actingAs($admin)
+        ->from(route('teams.index'))
+        ->post(route('teams.members.store', $team), [
+            'user_id' => $member->id,
+        ])
+        ->assertRedirect(route('teams.index'))
+        ->assertSessionHasErrors('role');
+
+    expect($team->members()->where('users.id', $member->id)->exists())->toBeFalse();
+});
+
+test('a non-admin cannot add someone to a team', function () {
+    $actor = User::factory()->create();
+    $team = Team::factory()->create();
+    $member = User::factory()->create();
 
     $this->actingAs($actor)
-        ->post(route('teams.members.store', $team), ['user_id' => $member->id])
+        ->post(route('teams.members.store', $team), [
+            'user_id' => $member->id,
+            'role' => TeamRole::Member->value,
+        ])
         ->assertForbidden();
 
     expect($team->members()->where('users.id', $member->id)->exists())->toBeFalse();
@@ -76,7 +105,10 @@ test('an admin cannot be added to a team', function () {
 
     $this->actingAs($admin)
         ->from(route('teams.index'))
-        ->post(route('teams.members.store', $team), ['user_id' => $otherAdmin->id])
+        ->post(route('teams.members.store', $team), [
+            'user_id' => $otherAdmin->id,
+            'role' => TeamRole::Member->value,
+        ])
         ->assertRedirect(route('teams.index'))
         ->assertSessionHasErrors('user_id');
 
@@ -89,12 +121,14 @@ test('a user cannot be added to the same team twice', function () {
 
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach(Role::factory()->create(['name' => RoleName::Member]));
-    $team->members()->attach($member);
+    $team->members()->attach($member->id, ['role' => TeamRole::Member->value]);
 
     $this->actingAs($admin)
         ->from(route('teams.index'))
-        ->post(route('teams.members.store', $team), ['user_id' => $member->id])
+        ->post(route('teams.members.store', $team), [
+            'user_id' => $member->id,
+            'role' => TeamRole::ProjectLead->value,
+        ])
         ->assertRedirect(route('teams.index'))
         ->assertSessionHasErrors('user_id');
 
@@ -107,8 +141,7 @@ test('an admin can remove a member from a team', function () {
 
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach(Role::factory()->create(['name' => RoleName::Member]));
-    $team->members()->attach($member);
+    $team->members()->attach($member->id, ['role' => TeamRole::Member->value]);
 
     $this->actingAs($admin)
         ->delete(route('teams.members.destroy', [$team, $member]))
@@ -123,22 +156,17 @@ test('removing a user who is not on the team returns not found', function () {
 
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach(Role::factory()->create(['name' => RoleName::Member]));
 
     $this->actingAs($admin)
         ->delete(route('teams.members.destroy', [$team, $member]))
         ->assertNotFound();
 });
 
-test('a member cannot remove someone from a team', function () {
+test('a non-admin cannot remove someone from a team', function () {
     $actor = User::factory()->create();
-    $memberRole = Role::factory()->create(['name' => RoleName::Member]);
-    $actor->roles()->attach($memberRole);
-
     $team = Team::factory()->create();
     $member = User::factory()->create();
-    $member->roles()->attach($memberRole);
-    $team->members()->attach($member);
+    $team->members()->attach($member->id, ['role' => TeamRole::Member->value]);
 
     $this->actingAs($actor)
         ->delete(route('teams.members.destroy', [$team, $member]))

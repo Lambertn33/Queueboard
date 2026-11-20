@@ -2,6 +2,7 @@
 
 namespace App\Services\Teams;
 
+use App\Enums\TeamRole;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -55,11 +56,13 @@ class TeamsService
     }
 
     /**
-     * Add a member to the team.
+     * Add a member to the team with a team role.
      */
-    public function addMember(Team $team, User $user): void
+    public function addMember(Team $team, User $user, TeamRole $role): void
     {
-        $team->members()->syncWithoutDetaching([$user->id]);
+        $team->members()->syncWithoutDetaching([
+            $user->id => ['role' => $role->value],
+        ]);
     }
 
     /**

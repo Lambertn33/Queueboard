@@ -44,14 +44,6 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($member),
             ],
-            'roles' => ['required', 'array', 'min:1'],
-            'roles.*' => [
-                'required',
-                Rule::enum(RoleName::class)->only([
-                    RoleName::Member,
-                    RoleName::ProjectLead,
-                ]),
-            ],
         ];
     }
 }

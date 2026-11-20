@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Enums\RoleName;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -27,14 +25,6 @@ class StoreUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'roles' => ['required', 'array', 'min:1'],
-            'roles.*' => [
-                'required',
-                Rule::enum(RoleName::class)->only([
-                    RoleName::Member,
-                    RoleName::ProjectLead,
-                ]),
-            ],
         ];
     }
 }

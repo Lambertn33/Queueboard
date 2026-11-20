@@ -36,7 +36,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request): RedirectResponse
     {
-        $this->usersService->createUser($request->safe()->only(['name', 'email', 'roles']));
+        $this->usersService->createUser($request->safe()->only(['name', 'email']));
 
         return redirect()->route('members.index');
     }
@@ -46,7 +46,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $this->usersService->updateUser($user, $request->safe()->only(['name', 'email', 'roles']));
+        $this->usersService->updateUser($user, $request->safe()->only(['name', 'email']));
 
         return redirect()->route('members.index');
     }

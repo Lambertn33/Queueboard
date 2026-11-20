@@ -12,15 +12,6 @@ const emit = defineEmits<{
     edit: [member: Member];
 }>();
 
-const roleLabels: Record<string, string> = {
-    MEMBER: 'Member',
-    PROJECT_LEAD: 'Project lead',
-};
-
-function rolesLabel(roles: string[]): string {
-    return roles.map((role) => roleLabels[role] ?? role).join(', ');
-}
-
 const actionClass = 'inline-flex size-8 items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700';
 </script>
 
@@ -29,15 +20,14 @@ const actionClass = 'inline-flex size-8 items-center justify-center text-gray-50
         <table class="w-full border-collapse text-left">
             <thead>
                 <tr class="bg-brand-soft text-[13px] font-medium text-[#98A2B3]">
-                    <th class="w-[28%] px-4 py-3 font-medium" scope="col">Name</th>
-                    <th class="w-[32%] px-4 py-3 font-medium" scope="col">Email</th>
-                    <th class="px-4 py-3 font-medium" scope="col">Roles</th>
+                    <th class="w-[40%] px-4 py-3 font-medium" scope="col">Name</th>
+                    <th class="px-4 py-3 font-medium" scope="col">Email</th>
                     <th class="px-4 py-3 font-medium" scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="members.data.length === 0">
-                    <td class="px-4 py-4 text-sm text-[#98A2B3]" colspan="4">No members yet.</td>
+                    <td class="px-4 py-4 text-sm text-[#98A2B3]" colspan="3">No members yet.</td>
                 </tr>
                 <tr
                     v-for="member in members.data"
@@ -46,7 +36,6 @@ const actionClass = 'inline-flex size-8 items-center justify-center text-gray-50
                 >
                     <td class="px-4 py-4 text-sm font-medium text-gray-900">{{ member.name }}</td>
                     <td class="px-4 py-4 text-sm text-gray-500">{{ member.email }}</td>
-                    <td class="px-4 py-4 text-sm text-gray-500">{{ rolesLabel(member.roles) }}</td>
                     <td class="px-4 py-4">
                         <div class="flex items-center gap-1">
                             <TheButton
