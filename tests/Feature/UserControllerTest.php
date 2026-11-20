@@ -1,7 +1,9 @@
 <?php
 
 use App\Enums\RoleName;
+use App\Enums\TeamRole;
 use App\Models\Role;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -23,6 +25,9 @@ test('the members list includes people who are not admins', function () {
     $zeta = User::factory()->create(['name' => 'Zeta', 'email' => 'zeta@queueboard.test']);
     $alpha = User::factory()->create(['name' => 'Alpha', 'email' => 'alpha@queueboard.test']);
 
+    $backend = Team::factory()->create(['name' => 'Backend Team']);
+    $backend->members()->attach($alpha->id, ['role' => TeamRole::Member->value]);
+
     $this->actingAs($admin)
         ->get(route('members.index'))
         ->assertOk()
@@ -33,11 +38,18 @@ test('the members list includes people who are not admins', function () {
                     'id' => $alpha->id,
                     'name' => 'Alpha',
                     'email' => 'alpha@queueboard.test',
+                    'memberships' => [
+                        [
+                            'team' => 'Backend Team',
+                            'role' => 'MEMBER',
+                        ],
+                    ],
                 ],
                 [
                     'id' => $zeta->id,
                     'name' => 'Zeta',
                     'email' => 'zeta@queueboard.test',
+                    'memberships' => [],
                 ],
             ])
             ->where('members.total', 2)
